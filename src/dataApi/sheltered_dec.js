@@ -1,13 +1,13 @@
 import axios from "axios";
 import Papa from "papaparse";
 
-export const optionsHighShore = {
+export const optionsShelteredShore = {
   record: {
     chart: {
       type: "line",
     },
     title: {
-      text: "Highshore Hourly Temperature",
+      text: "Sheltered Shore Hourly Temperature",
     },
     xAxis: {
       type: "datetime",
@@ -35,22 +35,26 @@ export const optionsHighShore = {
         pointStart: Date.UTC(2023, 11, 1, 0, 0, 0),
         pointInterval: 3600000,
       },
-      line: {
-        dataLabels: {
-          enabled: false,
-        },
-      },
+      // line: {
+      //   dataLabels: {
+      //     enabled: true,
+      //   },
+      // },
     },
     credits: {
       enabled: false,
     },
     series: [
       {
-        name: "Exposed",
+        name: "High",
         data: [],
       },
       {
-        name: "Sheltered",
+        name: "Mid",
+        data: [],
+      },
+      {
+        name: "Low",
         data: [],
       },
     ],
@@ -61,9 +65,9 @@ export const optionsHighShore = {
     },
   },
 
-  async fetchHighShoreDecData() {
+  async fetchShelteredShoreDecData() {
     const response = await axios.get(
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8eiwzmYfTFrkTrUK8OFfIY8lzV3OE3WSCW6BYhNRNhzW9GuWr0q3Iqg7Fp7PRF4g8SI2kPKfuybsb/pub?output=csv"
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAXakiXuR9XijVATMa_ACLjZ3j7_UOWnDm0MHwU355qrD1gfypi2n_YTqJ1TOc83q17Zg9dFWbYCJC/pub?output=csv"
     );
 
     const data = Papa.parse(response.data, {
@@ -71,8 +75,8 @@ export const optionsHighShore = {
       dynamicTyping: true,
     }).data;
 
-    this.record.series[0].data = data.map((row) => [row.hi_exposed]);
-
-    this.record.series[1].data = data.map((row) => [row.hi_sheltered]);
+    this.record.series[0].data = data.map((row) => [row.high]);
+    this.record.series[1].data = data.map((row) => [row.mid]);
+    this.record.series[2].data = data.map((row) => [row.low]);
   },
 };
